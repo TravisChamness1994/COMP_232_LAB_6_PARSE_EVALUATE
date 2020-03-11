@@ -71,7 +71,7 @@ void evalRepeatStmt(NODE *node)
         error("Repeat called with non-integer number of repeats!");
     }
 
-    for (int i = 0; i < numberOfRepeats.value.integral; ++i)
+    for (int i = 0; i < numberOfRepeats.value.integer; ++i)
     {
         evalStatement(node->rightNode);
     }
@@ -83,7 +83,7 @@ void evalPrintStmt(NODE *node)
     switch(toPrint.type)
     {
         case INT_TYPE:
-            printf("\nINT : %ld", toPrint.value.integral);
+            printf("\nINT : %ld", toPrint.value.integer);
             break;
         case FLOAT_TYPE:
             printf("\nFLOAT : %lf", toPrint.value.floating_point);
@@ -166,12 +166,12 @@ NUMBER evalAdd(NUMBER op1, NUMBER op2)
         if (op2.type == INT_TYPE)
         {
             result.type = INT_TYPE;
-            result.value.integral = op1.value.integral + op2.value.integral;
+            result.value.integer = op1.value.integer + op2.value.integer;
         }
         else
         {
             result.type = FLOAT_TYPE;
-            result.value.floating_point = (double)op1.value.integral + op2.value.floating_point;
+            result.value.floating_point = (double)op1.value.integer + op2.value.floating_point;
         }
     }
     else
@@ -179,7 +179,7 @@ NUMBER evalAdd(NUMBER op1, NUMBER op2)
         if (op2.type == INT_TYPE)
         {
             result.type = FLOAT_TYPE;
-            result.value.floating_point = op1.value.floating_point + (double)op2.value.integral;
+            result.value.floating_point = op1.value.floating_point + (double)op2.value.integer;
         }
         else
         {
@@ -198,12 +198,12 @@ NUMBER evalSub(NUMBER op1, NUMBER op2)
         if (op2.type == INT_TYPE)
         {
             result.type = INT_TYPE;
-            result.value.integral = op1.value.integral - op2.value.integral;
+            result.value.integer = op1.value.integer - op2.value.integer;
         }
         else
         {
             result.type = FLOAT_TYPE;
-            result.value.floating_point = (double)op1.value.integral - op2.value.floating_point;
+            result.value.floating_point = (double)op1.value.integer - op2.value.floating_point;
         }
     }
     else
@@ -211,7 +211,7 @@ NUMBER evalSub(NUMBER op1, NUMBER op2)
         if (op2.type == INT_TYPE)
         {
             result.type = FLOAT_TYPE;
-            result.value.floating_point = op1.value.floating_point - (double)op2.value.integral;
+            result.value.floating_point = op1.value.floating_point - (double)op2.value.integer;
         }
         else
         {
@@ -230,12 +230,12 @@ NUMBER evalMult(NUMBER op1, NUMBER op2)
         if (op2.type == INT_TYPE)
         {
             result.type = INT_TYPE;
-            result.value.integral = op1.value.integral * op2.value.integral;
+            result.value.integer = op1.value.integer * op2.value.integer;
         }
         else
         {
             result.type = FLOAT_TYPE;
-            result.value.floating_point = (double)op1.value.integral * op2.value.floating_point;
+            result.value.floating_point = (double)op1.value.integer * op2.value.floating_point;
         }
     }
     else
@@ -243,7 +243,7 @@ NUMBER evalMult(NUMBER op1, NUMBER op2)
         if (op2.type == INT_TYPE)
         {
             result.type = FLOAT_TYPE;
-            result.value.floating_point = op1.value.floating_point * (double)op2.value.integral;
+            result.value.floating_point = op1.value.floating_point * (double)op2.value.integer;
         }
         else
         {
@@ -262,12 +262,12 @@ NUMBER evalDiv(NUMBER op1, NUMBER op2)
         if (op2.type == INT_TYPE)
         {
             result.type = INT_TYPE;
-            result.value.integral = op1.value.integral / op2.value.integral;
+            result.value.integer = op1.value.integer / op2.value.integer;
         }
         else
         {
             result.type = FLOAT_TYPE;
-            result.value.floating_point = (double)op1.value.integral / op2.value.floating_point;
+            result.value.floating_point = (double)op1.value.integer / op2.value.floating_point;
         }
     }
     else
@@ -275,7 +275,7 @@ NUMBER evalDiv(NUMBER op1, NUMBER op2)
         if (op2.type == INT_TYPE)
         {
             result.type = FLOAT_TYPE;
-            result.value.floating_point = op1.value.floating_point / (double)op2.value.integral;
+            result.value.floating_point = op1.value.floating_point / (double)op2.value.integer;
         }
         else
         {
@@ -294,12 +294,12 @@ NUMBER evalMod(NUMBER op1, NUMBER op2)
         if (op2.type == INT_TYPE)
         {
             result.type = INT_TYPE;
-            result.value.integral = op1.value.integral % op2.value.integral;
+            result.value.integer = op1.value.integer % op2.value.integer;
         }
         else
         {
             result.type = FLOAT_TYPE;
-            result.value.floating_point = fmod((double)op1.value.integral, op2.value.floating_point);
+            result.value.floating_point = fmod((double)op1.value.integer, op2.value.floating_point);
         }
     }
     else
@@ -307,7 +307,7 @@ NUMBER evalMod(NUMBER op1, NUMBER op2)
         if (op2.type == INT_TYPE)
         {
             result.type = FLOAT_TYPE;
-            result.value.floating_point = fmod(op1.value.floating_point, (double)op2.value.integral);
+            result.value.floating_point = fmod(op1.value.floating_point, (double)op2.value.integer);
         }
         else
         {

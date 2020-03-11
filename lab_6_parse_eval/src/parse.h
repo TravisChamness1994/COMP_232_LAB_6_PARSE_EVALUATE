@@ -27,7 +27,7 @@ typedef enum
 
 typedef union
 {
-    long integral;
+    long integer;
     double floating_point;
 } NUMBER_VALUE;
 

@@ -26,33 +26,34 @@ NODE *program()
 
 NODE *statement()
 {
-    TOKEN *token = getNextToken(NULL);
-    if (token == NULL)
+    TOKEN *token = getNextToken(NULL); //Getting the next token and storing it in token pointer
+    if (token == NULL) //Edge case
     {
         return NULL;
     }
-    else if (token->type == EOF_TOKEN)
+    else if (token->type == EOF_TOKEN) //Edge case
     {
         freeToken(&token);
         return NULL;
     }
 
-    NODE *node = calloc(sizeof(NODE), 1);
-    node->type = STATEMENT_NODE;
+    NODE *node = calloc(sizeof(NODE), 1); //Create node
+    node->type = STATEMENT_NODE;    //This new node is of statement_node
 
     switch(token->type)
     {
-        case IDENT_TOKEN:
-            node->leftNode = assignStmt(&token);
+        case IDENT_TOKEN: //If token is identifier_token
+            node->leftNode = assignStmt(&token); //then we know the node will be representing an assignmentStatement. View language for context.
             break;
-        case REPEAT_TOKEN:
+        case REPEAT_TOKEN: //...
             node->leftNode = repeatStmt(&token);
             break;
-        case PRINT_TOKEN:
+        case PRINT_TOKEN: //...
             node->leftNode = printStmt(&token);
             break;
-        default:
+        default: //default is that we are not entering a statment type
             error("Invalid token of type %d at start of statement.", token->type);
+
     }
 
     return node;
@@ -60,22 +61,120 @@ NODE *statement()
 
 NODE *assignStmt(TOKEN **currToken)
 {
-    // TODO
+    NODE *node = calloc(sizeof(NODE), 1);
+    //assume that currToken is not a Null token because it has been passed to us with that check
+    node->type = ASSIGN_STMT_NODE;
+    //Assign Left_Node
+    node->leftNode = ident(currToken);
+    //Now we need to test for assignment opperator
+    *currToken = getNextToken(currToken);
+
+    if((*currToken)->type != ASSIGNMENT_TOKEN)
+    {
+        //will stop program if executes
+        error("Expected an assignment token in an assignment statement.");
+    }
+    //token will not be created into a node, so we will getnexttoken the given token
+    *currToken = getNextToken(currToken);
+
+    node -> rightNode = expr(currToken);
+
+    *currToken = getNextToken(currToken);
+
+    if((*currToken)->type != SEMICOLON_TOKEN)
+    {
+        error("Expected a semicolon token in an assignment statement.");
+    }
+    //we will not get next or pass currentToken forward so we need to free
+    freeToken(currToken);
+
+    return node;
+    // TODO - assignStmt - Done
 }
 
 NODE *repeatStmt(TOKEN **currToken)
 {
-    // TODO
+    //repeat ( <expr> ) <statement>
+    //Assume it is a repeat token because it is tested for in Statement production
+    NODE *node = calloc(sizeof(NODE),1);
+    node->type = REPEAT_STMT_NODE;
+    //expecting a lPar
+    *currToken = getNextToken(currToken);
+
+    if((*currToken)->type != LPAREN_TOKEN)
+    {
+        error("Expected a left parenthesis in a repeat statement.");
+    }
+
+    *currToken = getNextToken(currToken);
+
+    node->leftNode = expr(currToken);
+
+    *currToken = getNextToken(currToken);
+
+    if((*currToken)->type != RPAREN_TOKEN)
+    {
+        error("Expected a right parenthesis in a repeat statement.");
+    }
+    //statement pulls next token, no free, no next token
+    node->rightNode = statement();
+
+    return node;
+    // TODO - repeatStmt - Work
 }
 
 NODE *printStmt(TOKEN **currToken)
 {
-    // TODO
+    //print <expr> ;
+    //Assume it is a print token because it is tested for in Statement production
+    NODE *node = calloc(sizeof(NODE), 1);
+    node->type = PRINT_STMT_NODE;
+
+    *currToken = getNextToken(currToken);
+
+    node->leftNode = expr(currToken);
+    //expecting semicolon
+    *currToken = getNextToken(currToken);
+
+    if((*currToken)->type != SEMICOLON_TOKEN)
+    {
+        error("Expected a left parenthesis in a print statement.");
+    }
+
+    freeToken(currToken);
+
+    return node;
+    // TODO - printStmt - Work
 }
 
 NODE *expr(TOKEN **currToken)
 {
-    // TODO
+    // <term> | <term> <addop> <expr>
+    //Dont need to check token, need to check what is expexted
+    NODE *node = calloc(sizeof(NODE), 1);
+    node->type = EXPR_NODE;
+
+    node->leftNode = term(currToken);
+
+    *currToken = getNextToken(currToken);
+
+    switch ((*currToken)->type)
+    {
+        case ADD_OP_TOKEN:
+
+                node->data.op = (*currToken)->val.op;
+
+                *currToken = getNextToken(currToken);
+
+                node->rightNode = expr(currToken);
+            break;
+        default:
+            ungetToken(currToken);
+            break;
+    }
+
+    return node;
+    // TODO - expr - Work
 }
 
 NODE *term(TOKEN **currToken)

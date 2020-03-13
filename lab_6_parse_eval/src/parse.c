@@ -167,9 +167,13 @@ NODE *expr(TOKEN **currToken)
                 *currToken = getNextToken(currToken);
 
                 node->rightNode = expr(currToken);
+
             break;
+
         default:
+
             ungetToken(currToken);
+
             break;
     }
 
@@ -179,22 +183,127 @@ NODE *expr(TOKEN **currToken)
 
 NODE *term(TOKEN **currToken)
 {
-    // TODO
+    NODE* node = calloc(sizeof(NODE), 1);
+    node -> type = TERM_NODE;
+
+    node -> leftNode = factor(currToken);
+
+    *currToken = getNextToken(currToken);
+
+    switch ((*currToken)->type)
+    {
+        case MULT_OP_TOKEN:
+
+            node->data.op = (*currToken)->val.op;
+
+            *currToken = getNextToken(currToken);
+
+            node->rightNode = term(currToken);
+
+            break;
+
+        default:
+
+            ungetToken(currToken);
+
+            break;
+    }
+    return node;
+    // TODO - term - work
 }
 
 NODE *factor(TOKEN **currToken)
 {
-    // TODO
+    NODE *node = calloc(sizeof(NODE), 1);
+    node -> type = FACTOR_NODE;
+
+    switch ((*currToken)->type)
+    {
+        case IDENT_TOKEN:
+            node->leftNode = ident(currToken);
+            break;
+        case FLOAT_TOKEN:
+        case INT_TOKEN:
+            node->leftNode = number(currToken);
+            break;
+        case ADD_OP_TOKEN:
+                node->data.op = (*currToken)->val.op;
+                node->leftNode = factor(currToken);
+            break;
+        case RPAREN_TOKEN:
+                node->leftNode = expr(currToken);
+            break;
+        default:
+            ungetToken(currToken);
+            error("Expected ID, Number, Factor, or Expression");
+            break;
+    }
+
+    return node;
+    // TODO - Factor - Work
 }
 
 NODE *ident(TOKEN **currToken)
 {
-    // TODO
+    NODE *node = calloc(sizeof(NODE), 1);
+    node->type = IDENT_NODE;
+
+    if((*currToken)->val.string == NULL)
+    {
+
+        ungetToken(currToken);
+
+        error("Expected a string for an ID.");
+
+    }
+    else
+        {
+
+            node->data.identifier = (*currToken)->val.string;
+
+        }
+
+    //not passing forward, achieved a decorated leaf, can free
+    freeToken(currToken);
+    return node;
+    // TODO - Ident - Work
 }
 
 NODE *number(TOKEN **currToken)
 {
-    // TODO
+    NODE *node = calloc(sizeof(NODE), 1);
+    node->type = NUMBER_NODE;
+
+    switch ((*currToken)->type) {
+        case INT_TOKEN:
+
+            node->data.number.type = INT_TYPE;
+
+            node->data.number.value.integer = (*currToken)->val.integral;
+
+            break;
+
+        case FLOAT_TOKEN:
+
+            node->data.number.type = FLOAT_TYPE;
+
+            node->data.number.value.floating_point = (*currToken)->val.floating_point;
+
+            break;
+
+        default:
+
+            ungetToken(currToken);
+
+            error("Expected a integer or float for a number.");
+
+            break;
+    }
+
+    //No passing forward, can free the current token
+    freeToken(currToken);
+    return node;
+    // TODO - number - work
 }
 
 void freeParseTree(NODE **node)
@@ -216,7 +325,7 @@ void freeParseTree(NODE **node)
     {
         free((*node)->data.identifier);
     }
-
+    //No passing forward, can free current token
     free(*node);
     *node = NULL;
 }

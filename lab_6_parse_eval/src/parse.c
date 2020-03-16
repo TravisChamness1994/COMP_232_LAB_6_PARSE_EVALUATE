@@ -220,22 +220,39 @@ NODE *factor(TOKEN **currToken)
     switch ((*currToken)->type)
     {
         case IDENT_TOKEN:
+
             node->leftNode = ident(currToken);
+
             break;
+
         case FLOAT_TOKEN:
+
         case INT_TOKEN:
+
             node->leftNode = number(currToken);
+
             break;
+
         case ADD_OP_TOKEN:
+
                 node->data.op = (*currToken)->val.op;
+
                 node->leftNode = factor(currToken);
+
             break;
+
         case RPAREN_TOKEN:
+
                 node->leftNode = expr(currToken);
+
             break;
+
         default:
+
             ungetToken(currToken);
+
             error("Expected ID, Number, Factor, or Expression");
+
             break;
     }
 
@@ -258,9 +275,11 @@ NODE *ident(TOKEN **currToken)
     }
     else
         {
+            node->data.identifier = calloc(BUF_SIZE, sizeof(char));
 
-            node->data.identifier = (*currToken)->val.string;
+            strcpy(node->data.identifier, (*currToken)->val.string);
 
+            printf("\n");
         }
 
     //not passing forward, achieved a decorated leaf, can free

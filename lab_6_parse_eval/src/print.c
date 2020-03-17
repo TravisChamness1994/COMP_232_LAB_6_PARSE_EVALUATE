@@ -293,8 +293,11 @@ void printNumber(NODE *node, int indent)
                 printfIndented(indent + 1, node->data.identifier);
 
                 break;
+
             default:
+
                 error("Expected a float or an int in a number.");
+
                 break;
         }
     } else

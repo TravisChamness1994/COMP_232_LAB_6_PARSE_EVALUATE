@@ -1,4 +1,5 @@
 #include "eval.h"
+#include "parse.h"
 #include <math.h>
 
 #define DEFAULT_NUMBER (NUMBER){INT_TYPE, 0}
@@ -46,148 +47,67 @@ void evalStatement(NODE *node)
 
 void evalAssignStmt(NODE *node)
 {
-    NUMBER value = evalExpr(node->rightNode);
-    char *ident = node->leftNode->data.identifier;
+    //assign ::= ID = EXPR
+   //need to address a value of NUMBER and an ident char* in findSymbol and createSymbol
+   char* ident = node->data.identifier;
+   NUMBER value = evalExpr(node->rightNode);
 
-    SYMBOL_TABLE_NODE *oldSymbol = findSymbol(symbolTable, ident);
+   //try to find symbol
+   SYMBOL_TABLE_NODE *currSymbolNode = findSymbol(symbolTable,ident);
 
-    if (oldSymbol == NULL)
-    {
-        SYMBOL_TABLE_NODE *newSymbol = createSymbol(ident, value);
-        addSymbolToTable(&symbolTable, newSymbol);
-    }
-    else
-    {
-        oldSymbol->value = value;
-    }
+   //if In Symbol Tree
+   if(currSymbolNode != NULL)
+   {
+       //if exists, only need to update symbol value
+        currSymbolNode->value = node->data.number;
+   }
+   else
+       {
+            //currSymbolNode is Null, needs space & data
+            currSymbolNode = createSymbol(ident,value);
+            addSymbolToTable(&symbolTable, currSymbolNode);
+       }
+   //TODO - evalAssignStmt - Work
 }
 
 void evalRepeatStmt(NODE *node)
 {
-    NUMBER numberOfRepeats = evalExpr(node->leftNode);
-
-    if (numberOfRepeats.type != INT_TYPE)
-    {
-        error("Repeat called with non-integer number of repeats!");
-    }
-
-    for (int i = 0; i < numberOfRepeats.value.integer; ++i)
-    {
-        evalStatement(node->rightNode);
-    }
+    //TODO
 }
 
 void evalPrintStmt(NODE *node)
 {
-    NUMBER toPrint = evalExpr(node->leftNode);
-    switch(toPrint.type)
-    {
-        case INT_TYPE:
-            printf("\nINT : %ld", toPrint.value.integer);
-            break;
-        case FLOAT_TYPE:
-            printf("\nFLOAT : %lf", toPrint.value.floating_point);
-            break;
-    }
+   //TODO
 }
 
 NUMBER evalExpr(NODE *node)
 {
-    NUMBER val = evalTerm(node->leftNode);
-    if (node->rightNode != NULL)
-    {
-        NUMBER rightVal = evalExpr(node->rightNode);
-        char op = node->data.op;
-        val = evalOperation(val, rightVal, op);
-    }
-    return val;
+   //TODO
 }
 
 NUMBER evalTerm(NODE *node)
 {
-    NUMBER val = evalFactor(node->leftNode);
-    if (node->rightNode != NULL)
-    {
-        NUMBER rightVal = evalTerm(node->rightNode);
-        char op = node->data.op;
-        val = evalOperation(val, rightVal, op);
-    }
-    return val;
+   //TODO
 }
 
 NUMBER evalFactor(NODE *node)
 {
-    NUMBER val = DEFAULT_NUMBER;
-    switch(node->leftNode->type)
-    {
-        case FACTOR_NODE:
-            val = evalOperation(val, evalFactor(node->leftNode), node->data.op);
-            break;
-        case NUMBER_NODE:
-            val = evalNumber(node->leftNode);
-            break;
-        case IDENT_NODE:
-            val = evalId(node->leftNode);
-            break;
-        case EXPR_NODE:
-            val = evalExpr(node->leftNode);
-            break;
-        default:
-            error("Invalid child type %d for factor node.", node->leftNode->type);
-    }
-    return val;
+   //TODO
 }
 
 NUMBER evalNumber(NODE *node)
 {
-    return node->data.number;
+    //TODO
 }
 
 NUMBER evalId(NODE *node)
 {
-    char *ident = node->data.identifier;
-
-    SYMBOL_TABLE_NODE *symbol = findSymbol(symbolTable, ident);
-
-    if (symbol == NULL)
-    {
-        error("Undefined symbol %s", ident);
-        return DEFAULT_NUMBER;
-    }
-
-    return evalSymbol(symbol);
+   //TODO
 }
 
 NUMBER evalAdd(NUMBER op1, NUMBER op2)
 {
-    NUMBER result = DEFAULT_NUMBER;
-    if (op1.type == INT_TYPE)
-    {
-        if (op2.type == INT_TYPE)
-        {
-            result.type = INT_TYPE;
-            result.value.integer = op1.value.integer + op2.value.integer;
-        }
-        else
-        {
-            result.type = FLOAT_TYPE;
-            result.value.floating_point = (double)op1.value.integer + op2.value.floating_point;
-        }
-    }
-    else
-    {
-        if (op2.type == INT_TYPE)
-        {
-            result.type = FLOAT_TYPE;
-            result.value.floating_point = op1.value.floating_point + (double)op2.value.integer;
-        }
-        else
-        {
-            result.type = FLOAT_TYPE;
-            result.value.floating_point = op1.value.floating_point + op2.value.floating_point;
-        }
-    }
-    return result;
+    //TODO
 }
 
 NUMBER evalSub(NUMBER op1, NUMBER op2)

@@ -112,150 +112,27 @@ NUMBER evalAdd(NUMBER op1, NUMBER op2)
 
 NUMBER evalSub(NUMBER op1, NUMBER op2)
 {
-    NUMBER result = DEFAULT_NUMBER;
-    if (op1.type == INT_TYPE)
-    {
-        if (op2.type == INT_TYPE)
-        {
-            result.type = INT_TYPE;
-            result.value.integer = op1.value.integer - op2.value.integer;
-        }
-        else
-        {
-            result.type = FLOAT_TYPE;
-            result.value.floating_point = (double)op1.value.integer - op2.value.floating_point;
-        }
-    }
-    else
-    {
-        if (op2.type == INT_TYPE)
-        {
-            result.type = FLOAT_TYPE;
-            result.value.floating_point = op1.value.floating_point - (double)op2.value.integer;
-        }
-        else
-        {
-            result.type = FLOAT_TYPE;
-            result.value.floating_point = op1.value.floating_point - op2.value.floating_point;
-        }
-    }
-    return result;
+   //TODO
 }
 
 NUMBER evalMult(NUMBER op1, NUMBER op2)
 {
-    NUMBER result = DEFAULT_NUMBER;
-    if (op1.type == INT_TYPE)
-    {
-        if (op2.type == INT_TYPE)
-        {
-            result.type = INT_TYPE;
-            result.value.integer = op1.value.integer * op2.value.integer;
-        }
-        else
-        {
-            result.type = FLOAT_TYPE;
-            result.value.floating_point = (double)op1.value.integer * op2.value.floating_point;
-        }
-    }
-    else
-    {
-        if (op2.type == INT_TYPE)
-        {
-            result.type = FLOAT_TYPE;
-            result.value.floating_point = op1.value.floating_point * (double)op2.value.integer;
-        }
-        else
-        {
-            result.type = FLOAT_TYPE;
-            result.value.floating_point = op1.value.floating_point * op2.value.floating_point;
-        }
-    }
-    return result;
+  //TODO
 }
 
 NUMBER evalDiv(NUMBER op1, NUMBER op2)
 {
-    NUMBER result = DEFAULT_NUMBER;
-    if (op1.type == INT_TYPE)
-    {
-        if (op2.type == INT_TYPE)
-        {
-            result.type = INT_TYPE;
-            result.value.integer = op1.value.integer / op2.value.integer;
-        }
-        else
-        {
-            result.type = FLOAT_TYPE;
-            result.value.floating_point = (double)op1.value.integer / op2.value.floating_point;
-        }
-    }
-    else
-    {
-        if (op2.type == INT_TYPE)
-        {
-            result.type = FLOAT_TYPE;
-            result.value.floating_point = op1.value.floating_point / (double)op2.value.integer;
-        }
-        else
-        {
-            result.type = FLOAT_TYPE;
-            result.value.floating_point = op1.value.floating_point / op2.value.floating_point;
-        }
-    }
-    return result;
+   //TODO
 }
 
 NUMBER evalMod(NUMBER op1, NUMBER op2)
 {
-    NUMBER result = DEFAULT_NUMBER;
-    if (op1.type == INT_TYPE)
-    {
-        if (op2.type == INT_TYPE)
-        {
-            result.type = INT_TYPE;
-            result.value.integer = op1.value.integer % op2.value.integer;
-        }
-        else
-        {
-            result.type = FLOAT_TYPE;
-            result.value.floating_point = fmod((double)op1.value.integer, op2.value.floating_point);
-        }
-    }
-    else
-    {
-        if (op2.type == INT_TYPE)
-        {
-            result.type = FLOAT_TYPE;
-            result.value.floating_point = fmod(op1.value.floating_point, (double)op2.value.integer);
-        }
-        else
-        {
-            result.type = FLOAT_TYPE;
-            result.value.floating_point = fmod(op1.value.floating_point, op2.value.floating_point);
-        }
-    }
-    return result;
+    //TODO
 }
 
 NUMBER evalOperation(NUMBER operand1, NUMBER operand2, char op)
 {
-    switch (op)
-    {
-        case '+':
-            return evalAdd(operand1, operand2);
-        case '-':
-            return evalSub(operand1, operand2);
-        case '*':
-            return evalMult(operand1, operand2);
-        case '/':
-            return evalDiv(operand1, operand2);
-        case '%':
-            return evalMod(operand1, operand2);
-        default:
-            error("Invalid operation character %c.", op);
-    }
-    return DEFAULT_NUMBER; // unreachable
+    //TODO
 }
 
 SYMBOL_TABLE_NODE *findSymbol(SYMBOL_TABLE_NODE *table, char *ident)

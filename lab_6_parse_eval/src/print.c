@@ -224,24 +224,35 @@ void printFactor(NODE *node, int indent)
 
     if(node->leftNode != NULL)
     {
-        switch(node->leftNode->type)
+        switch (node->data.op)
         {
-            case IDENT_NODE:
-                printId(node->leftNode, indent + 1);
-                break;
-            case NUMBER_NODE:
-                printNumber(node->leftNode, indent + 1);
-                break;
-            case FACTOR_NODE:
-                printFactor(node->leftNode, indent + 1);
-                break;
-            case EXPR_NODE:
-                printExpr(node->leftNode, indent + 1);
+            case '+':
+            case '-':
+
+                printNumber(node, indent + 1);
+
                 break;
             default:
-                error("Expected an ID, number, factor, or expression in factor.");
-                break;
+                switch(node->leftNode->type)
+                {
+
+                    case IDENT_NODE:
+                        printId(node->leftNode, indent + 1);
+                        break;
+                    case NUMBER_NODE:
+                        printNumber(node->leftNode, indent + 1);
+                        break;
+                    case EXPR_NODE:
+                        printExpr(node->leftNode, indent + 1);
+                        break;
+                    default:
+                        error("Expected an ID, number, factor, or expression in factor.");
+                        break;
+
+                }
+            break;
         }
+
     } else
         error("Invalid factor.");
 
@@ -273,33 +284,73 @@ void printNumber(NODE *node, int indent)
 
     if(node != NULL)
     {
-        switch (node->data.number.type)
-        {
-            case INT_TYPE:
+        if(node->type != FACTOR_NODE) {
+            switch (node->data.number.type) {
+                case INT_TYPE:
 
-                node->data.identifier = calloc(BUF_SIZE, sizeof(char));
+                    node->data.identifier = calloc(BUF_SIZE, sizeof(char));
 
-                sprintf(node->data.identifier,"%ld", node->data.number.value.integer);
+                    sprintf(node->data.identifier, "%ld", node->data.number.value.integer);
 
-                printfIndented(indent + 1, node->data.identifier);
+                    printfIndented(indent + 1, node->data.identifier);
 
-                break;
-            case FLOAT_TYPE:
+                    break;
+                case FLOAT_TYPE:
 
-                node->data.identifier = calloc(BUF_SIZE, sizeof(char));
+                    node->data.identifier = calloc(BUF_SIZE, sizeof(char));
 
-                sprintf(node->data.identifier,"%f", node->data.number.value.floating_point);
+                    sprintf(node->data.identifier, "%f", node->data.number.value.floating_point);
 
-                printfIndented(indent + 1, node->data.identifier);
+                    printfIndented(indent + 1, node->data.identifier);
 
-                break;
+                    break;
 
-            default:
+                default:
 
-                error("Expected a float or an int in a number.");
+                    error("Expected a float or an int in a number.");
 
-                break;
-        }
+                    break;
+            }
+        } else
+            //
+            {
+            //holder string will store the full signed number to be printed.
+                char* signedNumber = calloc(sizeof(char), strlen(&(node->data.op)));
+
+                switch (node->leftNode->data.number.type) {
+                    case INT_TYPE:
+
+                        node->leftNode->data.identifier = calloc(BUF_SIZE, sizeof(char));
+
+                        sprintf(node->leftNode->data.identifier, "%ld", node->leftNode->data.number.value.integer);
+                        sprintf(signedNumber, "%c", node->data.op);
+                        //NOTE! Strcat appends two null teminated strings. Allocating space for both string to fit. This is why
+                        //no extra callocing is necessary.
+                        strcat(signedNumber, node->leftNode->data.identifier);
+                        //adjusted to print node leftnodes info
+                        printfIndented(indent + 1, signedNumber);
+
+                        break;
+                    case FLOAT_TYPE:
+
+                        node->leftNode->data.identifier = calloc(BUF_SIZE, sizeof(char));
+
+                        sprintf(node->leftNode->data.identifier, "%f", node->leftNode->data.number.value.floating_point);
+                        sprintf(signedNumber, "%c", node->data.op);
+
+                        strcat(signedNumber, node->leftNode->data.identifier);
+                        //adjusted to print node leftnodes info
+                        printfIndented(indent + 1, signedNumber);
+
+                        break;
+
+                    default:
+
+                        error("Expected a float or an int in a number.");
+
+                        break;
+                }
+            }
     } else
         error("Invalid Number");
 

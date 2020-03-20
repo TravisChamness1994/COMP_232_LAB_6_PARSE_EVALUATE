@@ -215,7 +215,7 @@ NODE *term(TOKEN **currToken)
 NODE *factor(TOKEN **currToken)
 {
     NODE *node = calloc(sizeof(NODE), 1);
-    node -> type = FACTOR_NODE;
+    node ->type = FACTOR_NODE;
 
     switch ((*currToken)->type)
     {
@@ -237,7 +237,9 @@ NODE *factor(TOKEN **currToken)
 
                 node->data.op = (*currToken)->val.op;
 
-                node->leftNode = factor(currToken);
+                *currToken = getNextToken(currToken);
+
+                node->leftNode = number(currToken);
 
             break;
 

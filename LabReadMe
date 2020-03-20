@@ -1,0 +1,364 @@
+#Lab 6 Parse/Print/Evaluate
+- Descirption: 
+
+Parse - The parsing program creates a decorated abstract syntax tree containing the data providing by the scanner in the form of tokens. Each token lends information describing a step in the tree which the parser stores. The information is the basis of decisions that will be made in order to accurately create the AST which describes the tokens and the form of the language that it models.
+
+Print - The printing program follows the nodes and prints out each lexeme or token along the edge of the AST branch which it follows. Each call to print a node will be indented to a degree which represents the depth of the given node it prints.
+
+- Testing
+
+Test1:
+```
+*Input*
+
+firstVar = 100;
+print firstVar;
+second2var = 0.15;
+print second2var;
+repeat (2)
+    firstVar = firstVar - 1;
+print firstVar;
+repeat (10)
+    print 101.725;
+
+--------------------------------------
+
+*Output*
+
+Done parsing...
+
+START STATEMENT
+|  START ASSIGN STATEMENT
+|  |  START IDENT
+|  |  |  firstVar
+|  |  END IDENT
+|  |  START EXPRESSION
+|  |  |  START TERM
+|  |  |  |  START FACTOR
+|  |  |  |  |  START NUMBER
+|  |  |  |  |  |  100
+|  |  |  |  |  END NUMBER
+|  |  |  |  END FACTOR
+|  |  |  END TERM
+|  |  END EXPRESSION
+|  END ASSIGN STATEMENT
+END STATEMENT
+START STATEMENT
+|  START PRINT STATEMENT
+|  |  START EXPRESSION
+|  |  |  START TERM
+|  |  |  |  START FACTOR
+|  |  |  |  |  START IDENT
+|  |  |  |  |  |  firstVar
+|  |  |  |  |  END IDENT
+|  |  |  |  END FACTOR
+|  |  |  END TERM
+|  |  END EXPRESSION
+|  END PRINT STATEMENT
+END STATEMENT
+START STATEMENT
+|  START ASSIGN STATEMENT
+|  |  START IDENT
+|  |  |  second2var
+|  |  END IDENT
+|  |  START EXPRESSION
+|  |  |  START TERM
+|  |  |  |  START FACTOR
+|  |  |  |  |  START NUMBER
+|  |  |  |  |  |  0.150000
+|  |  |  |  |  END NUMBER
+|  |  |  |  END FACTOR
+|  |  |  END TERM
+|  |  END EXPRESSION
+|  END ASSIGN STATEMENT
+END STATEMENT
+START STATEMENT
+|  START PRINT STATEMENT
+|  |  START EXPRESSION
+|  |  |  START TERM
+|  |  |  |  START FACTOR
+|  |  |  |  |  START IDENT
+|  |  |  |  |  |  second2var
+|  |  |  |  |  END IDENT
+|  |  |  |  END FACTOR
+|  |  |  END TERM
+|  |  END EXPRESSION
+|  END PRINT STATEMENT
+END STATEMENT
+START STATEMENT
+|  START REPEAT STATEMENT
+|  |  START EXPRESSION
+|  |  |  START TERM
+|  |  |  |  START FACTOR
+|  |  |  |  |  START NUMBER
+|  |  |  |  |  |  2
+|  |  |  |  |  END NUMBER
+|  |  |  |  END FACTOR
+|  |  |  END TERM
+|  |  END EXPRESSION
+|  |  START STATEMENT
+|  |  |  START ASSIGN STATEMENT
+|  |  |  |  START IDENT
+|  |  |  |  |  firstVar
+|  |  |  |  END IDENT
+|  |  |  |  START EXPRESSION
+|  |  |  |  |  START TERM
+|  |  |  |  |  |  START FACTOR
+|  |  |  |  |  |  |  START IDENT
+|  |  |  |  |  |  |  |  firstVar
+|  |  |  |  |  |  |  END IDENT
+|  |  |  |  |  |  END FACTOR
+|  |  |  |  |  END TERM
+|  |  |  |  |  START EXPRESSION
+|  |  |  |  |  |  START TERM
+|  |  |  |  |  |  |  START FACTOR
+|  |  |  |  |  |  |  |  START NUMBER
+|  |  |  |  |  |  |  |  |  1
+|  |  |  |  |  |  |  |  END NUMBER
+|  |  |  |  |  |  |  END FACTOR
+|  |  |  |  |  |  END TERM
+|  |  |  |  |  END EXPRESSION
+|  |  |  |  END EXPRESSION
+|  |  |  END ASSIGN STATEMENT
+|  |  END STATEMENT
+|  END REPEAT STATEMENT
+END STATEMENT
+START STATEMENT
+|  START PRINT STATEMENT
+|  |  START EXPRESSION
+|  |  |  START TERM
+|  |  |  |  START FACTOR
+|  |  |  |  |  START IDENT
+|  |  |  |  |  |  firstVar
+|  |  |  |  |  END IDENT
+|  |  |  |  END FACTOR
+|  |  |  END TERM
+|  |  END EXPRESSION
+|  END PRINT STATEMENT
+END STATEMENT
+START STATEMENT
+|  START REPEAT STATEMENT
+|  |  START EXPRESSION
+|  |  |  START TERM
+|  |  |  |  START FACTOR
+|  |  |  |  |  START NUMBER
+|  |  |  |  |  |  10
+|  |  |  |  |  END NUMBER
+|  |  |  |  END FACTOR
+|  |  |  END TERM
+|  |  END EXPRESSION
+|  |  START STATEMENT
+|  |  |  START PRINT STATEMENT
+|  |  |  |  START EXPRESSION
+|  |  |  |  |  START TERM
+|  |  |  |  |  |  START FACTOR
+|  |  |  |  |  |  |  START NUMBER
+|  |  |  |  |  |  |  |  101.725000
+|  |  |  |  |  |  |  END NUMBER
+|  |  |  |  |  |  END FACTOR
+|  |  |  |  |  END TERM
+|  |  |  |  END EXPRESSION
+|  |  |  END PRINT STATEMENT
+|  |  END STATEMENT
+|  END REPEAT STATEMENT
+END STATEMENT
+Process finished with exit code 0
+
+
+```
+
+Test2:
+```
+*Input*
+
+firstVar = +100.5;
+print firstVar;
+second2var = -0.15009;
+print second2var;
+repeat (1 + 1)
+    firstVar = firstVar - 1;
+print firstVar;
+repeat (15.43)
+    print 101.725;
+
+--------------------------------------
+
+*Output*
+
+Done parsing...
+
+START STATEMENT
+|  START ASSIGN STATEMENT
+|  |  START IDENT
+|  |  |  firstVar
+|  |  END IDENT
+|  |  START EXPRESSION
+|  |  |  START TERM
+|  |  |  |  START FACTOR
+|  |  |  |  |  START NUMBER
+|  |  |  |  |  |  +100.500000
+|  |  |  |  |  END NUMBER
+|  |  |  |  END FACTOR
+|  |  |  END TERM
+|  |  END EXPRESSION
+|  END ASSIGN STATEMENT
+END STATEMENT
+START STATEMENT
+|  START PRINT STATEMENT
+|  |  START EXPRESSION
+|  |  |  START TERM
+|  |  |  |  START FACTOR
+|  |  |  |  |  START IDENT
+|  |  |  |  |  |  firstVar
+|  |  |  |  |  END IDENT
+|  |  |  |  END FACTOR
+|  |  |  END TERM
+|  |  END EXPRESSION
+|  END PRINT STATEMENT
+END STATEMENT
+START STATEMENT
+|  START ASSIGN STATEMENT
+|  |  START IDENT
+|  |  |  second2var
+|  |  END IDENT
+|  |  START EXPRESSION
+|  |  |  START TERM
+|  |  |  |  START FACTOR
+|  |  |  |  |  START NUMBER
+|  |  |  |  |  |  -0.150090
+|  |  |  |  |  END NUMBER
+|  |  |  |  END FACTOR
+|  |  |  END TERM
+|  |  END EXPRESSION
+|  END ASSIGN STATEMENT
+END STATEMENT
+START STATEMENT
+|  START PRINT STATEMENT
+|  |  START EXPRESSION
+|  |  |  START TERM
+|  |  |  |  START FACTOR
+|  |  |  |  |  START IDENT
+|  |  |  |  |  |  second2var
+|  |  |  |  |  END IDENT
+|  |  |  |  END FACTOR
+|  |  |  END TERM
+|  |  END EXPRESSION
+|  END PRINT STATEMENT
+END STATEMENT
+START STATEMENT
+|  START REPEAT STATEMENT
+|  |  START EXPRESSION
+|  |  |  START TERM
+|  |  |  |  START FACTOR
+|  |  |  |  |  START NUMBER
+|  |  |  |  |  |  1
+|  |  |  |  |  END NUMBER
+|  |  |  |  END FACTOR
+|  |  |  END TERM
+|  |  |  START EXPRESSION
+|  |  |  |  START TERM
+|  |  |  |  |  START FACTOR
+|  |  |  |  |  |  START NUMBER
+|  |  |  |  |  |  |  1
+|  |  |  |  |  |  END NUMBER
+|  |  |  |  |  END FACTOR
+|  |  |  |  END TERM
+|  |  |  END EXPRESSION
+|  |  END EXPRESSION
+|  |  START STATEMENT
+|  |  |  START ASSIGN STATEMENT
+|  |  |  |  START IDENT
+|  |  |  |  |  firstVar
+|  |  |  |  END IDENT
+|  |  |  |  START EXPRESSION
+|  |  |  |  |  START TERM
+|  |  |  |  |  |  START FACTOR
+|  |  |  |  |  |  |  START IDENT
+|  |  |  |  |  |  |  |  firstVar
+|  |  |  |  |  |  |  END IDENT
+|  |  |  |  |  |  END FACTOR
+|  |  |  |  |  END TERM
+|  |  |  |  |  START EXPRESSION
+|  |  |  |  |  |  START TERM
+|  |  |  |  |  |  |  START FACTOR
+|  |  |  |  |  |  |  |  START NUMBER
+|  |  |  |  |  |  |  |  |  1
+|  |  |  |  |  |  |  |  END NUMBER
+|  |  |  |  |  |  |  END FACTOR
+|  |  |  |  |  |  END TERM
+|  |  |  |  |  END EXPRESSION
+|  |  |  |  END EXPRESSION
+|  |  |  END ASSIGN STATEMENT
+|  |  END STATEMENT
+|  END REPEAT STATEMENT
+END STATEMENT
+START STATEMENT
+|  START PRINT STATEMENT
+|  |  START EXPRESSION
+|  |  |  START TERM
+|  |  |  |  START FACTOR
+|  |  |  |  |  START IDENT
+|  |  |  |  |  |  firstVar
+|  |  |  |  |  END IDENT
+|  |  |  |  END FACTOR
+|  |  |  END TERM
+|  |  END EXPRESSION
+|  END PRINT STATEMENT
+END STATEMENT
+START STATEMENT
+|  START REPEAT STATEMENT
+|  |  START EXPRESSION
+|  |  |  START TERM
+|  |  |  |  START FACTOR
+|  |  |  |  |  START NUMBER
+|  |  |  |  |  |  15.430000
+|  |  |  |  |  END NUMBER
+|  |  |  |  END FACTOR
+|  |  |  END TERM
+|  |  END EXPRESSION
+|  |  START STATEMENT
+|  |  |  START PRINT STATEMENT
+|  |  |  |  START EXPRESSION
+|  |  |  |  |  START TERM
+|  |  |  |  |  |  START FACTOR
+|  |  |  |  |  |  |  START NUMBER
+|  |  |  |  |  |  |  |  101.725000
+|  |  |  |  |  |  |  END NUMBER
+|  |  |  |  |  |  END FACTOR
+|  |  |  |  |  END TERM
+|  |  |  |  END EXPRESSION
+|  |  |  END PRINT STATEMENT
+|  |  END STATEMENT
+|  END REPEAT STATEMENT
+END STATEMENT
+Process finished with exit code 0
+
+```
+
+Test3
+```
+*Input*
+
+va&r1 = +100.5;
+print firstVar;
+var2 = -0.15009;
+print var2;
+repe-at (1 + 1)
+    var1 = var1 - 1;
+pri*nt var1;
+repe(at (15.43)
+    print 101.725;
+
+--------------------------------------
+
+*Output*
+
+PARSING ERROR: Expected an assignment token in an assignment statement.
+Exiting...
+
+Process finished with exit code 1
+
+```
+
+- Description of Known Issues:
+No known issues, errors are produced when expected such as non-existing non-terminal or lexemes will trigger the error call. Signed or unsigned numbers are addressed as well. 

@@ -60,7 +60,7 @@ void evalAssignStmt(NODE *node)
     if(currSymbolNode != NULL)
     {
         //if exists, only need to update symbol value
-        currSymbolNode->value = node->data.number;
+        currSymbolNode->value = value;
     }
     else
     {
@@ -103,13 +103,13 @@ void evalPrintStmt(NODE *node)
         //addressing Integer
         case INT_TYPE:
 
-            printf("INT : %ld", value.value.integer);
+            printf("INT : %ld\n", value.value.integer);
 
             break;
 
         case FLOAT_TYPE:
 
-            printf("FLOAT : %f", value.value.floating_point);
+            printf("FLOAT : %f\n", value.value.floating_point);
 
             break;
 
@@ -150,8 +150,9 @@ NUMBER evalExpr(NODE *node)
         }
 
     } else
-        //otherwise value is only the term
         value = term;
+        //otherwise value is only the term
+
 
     return value;
     //TODO - EvalExpression - Work
@@ -194,11 +195,11 @@ NUMBER evalFactor(NODE *node)
 
     NUMBER value = DEFAULT_NUMBER;
 
-    switch(node->type)
+    switch(node->leftNode->type)
     {
         case IDENT_NODE:
 
-            value = evalId(node->leftNode);
+            value = evalId(node);
 
             break;
 
@@ -216,7 +217,7 @@ NUMBER evalFactor(NODE *node)
 
         case EXPR_NODE:
 
-            value = evalExpr(node->leftNode);
+            value = evalExpr(node);
 
             break;
 
@@ -274,7 +275,7 @@ NUMBER evalId(NODE *node)
 {
     //can use findSymbol to see if the identity is in the table.
 
-    char* ident = node->data.identifier;
+    char *ident = node->leftNode->data.identifier;
 
     SYMBOL_TABLE_NODE *currSymbolNode = findSymbol(symbolTable, ident);
 
@@ -514,10 +515,11 @@ NUMBER evalMod(NUMBER op1, NUMBER op2)
                     result.value.integer = op1.value.integer % op2.value.integer;
 
                     break;
+
                 case FLOAT_TYPE:
 
                     result.type = FLOAT_TYPE;
-                    result.value.floating_point = fmod((double)(op1.value.integer), op2.value.floating_point);
+//                    result.value.floating_point = fmod((double)(op1.value.integer), op2.value.floating_point);
 
                     break;
             }
@@ -530,13 +532,13 @@ NUMBER evalMod(NUMBER op1, NUMBER op2)
                 case INT_TYPE:
 
                     result.type = FLOAT_TYPE;
-                    result.value.floating_point = fmod(op1.value.floating_point, (double)(op2.value.integer));
+//                    result.value.floating_point = (double)fmod(op1.value.floating_point, (double)(op2.value.integer));
 
                     break;
                 case FLOAT_TYPE:
 
                     result.type = FLOAT_TYPE;
-                    result.value.floating_point = fmod(op1.value.floating_point, op2.value.floating_point);
+//                    result.value.floating_point = fmod(op1.value.floating_point, op2.value.floating_point);
 
                     break;
             }
@@ -548,11 +550,24 @@ NUMBER evalMod(NUMBER op1, NUMBER op2)
     //TODO
 }
 
-NUMBER evalOperation(NUMBER operand1, NUMBER operand2, char op)
-{
-    //TODO
-}
+NUMBER evalOperation(NUMBER operand1, NUMBER operand2, char op) {
 
+    switch (op) {
+        case '+':
+            return evalAdd(operand1, operand2);
+        case '-':
+            return evalSub(operand1, operand2);
+        case '*':
+            return evalMult(operand1, operand2);
+        case '/':
+            return evalDiv(operand1, operand2);
+        case '%':
+            return evalMod(operand1, operand2);
+        default:
+            error("Invalid operation character %c.", op);
+    }
+    return DEFAULT_NUMBER; // unreachable}
+}
 SYMBOL_TABLE_NODE *findSymbol(SYMBOL_TABLE_NODE *table, char *ident)
 {
     while (table != NULL)

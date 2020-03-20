@@ -1,9 +1,9 @@
-firstVar = 100;
+firstVar = +100.5;
 print firstVar;
-second2var = 0.15;
+second2var = -0.15009;
 print second2var;
-repeat (2)
+repeat (1 + 1)
     firstVar = firstVar - 1;
 print firstVar;
-repeat (10)
+repeat (15.43)
     print 101.725;
